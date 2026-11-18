@@ -1,0 +1,23 @@
+name: Check website
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build all language pages
+        run: python build.py
+      - name: Check routes, metadata, assets and inquiry categories
+        run: python check.py
+      - name: Check browser JavaScript syntax
+        run: node --check src/app.js
+      - name: Verify checked-in live-site files match source
+        run: python publish-root.py --check
