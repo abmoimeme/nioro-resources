@@ -1,8 +1,12 @@
 name: Check website
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
+concurrency:
+  group: website-check-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -21,3 +25,5 @@ jobs:
         run: node --check src/app.js
       - name: Verify checked-in live-site files match source
         run: python publish-root.py --check
+      - name: Test validation and publishing safeguards
+        run: python -m unittest discover -s tests -v

@@ -1,28 +1,37 @@
 # Updating niororesources.com
 
-This branch prepares the expanded bilingual corporate website for the existing repository at https://github.com/abmoimeme/nioro-resources . The existing CNAME is preserved as `niororesources.com`.
+The public site uses GitHub Pages from `main` at `/ (root)` with the custom domain `niororesources.com`. HTTPS enforcement was verified on November 18, 2026. The private ChatGPT preview is a separate deployment and is not updated by this repository.
 
-## Review and release
+## Edit, verify and release
 
-Review the `website/global-network-refresh` branch before merging. Check the repository Settings → Pages configuration. The checked-in root output is compatible with publishing from `main` and `/ (root)`. Repository settings and DNS have not been changed or independently confirmed by this preparation.
-
-If GitHub Pages is already configured to publish `main` at the root, merging this branch should trigger its deployment. Otherwise, connect the actual host before expecting an update. A Git push alone is not proof that the live domain changed.
-
-## Editing
-
-Edit content in `src/content.py`, styling in `src/styles.css`, interactions in `src/app.js`, and templates in `build.py`. Then run:
+Edit `src/content.py`, `src/styles.css`, `src/app.js`, or the templates in `build.py`. Public routes live in `src/schema.py`; category IDs are explicit keys in each locale. Keep existing category IDs stable because links may be bookmarked. Email text is populated from `site.config.json`.
 
 ```sh
 python3 build.py
 python3 check.py
 node --check src/app.js
+python3 publish-root.py --dry-run
 python3 publish-root.py
+python3 publish-root.py --check
+python3 -m unittest discover -s tests -v
 ```
 
-Commit source and refreshed root output together. The GitHub check rebuilds the website and fails if committed output is stale. The `.nojekyll` file keeps this site static.
+Commit the source changes, generated root files, and `generated-files.json` together. `dist/` is disposable, ignored build output. It is never edited or committed.
 
-The previous company website and app catalog are retained under `/legacy/`. Its original app links, support email and privacy content remain available. The development department links to that catalog. The old `/privacy.html` URL redirects to the updated corporate privacy page. The former Markets URLs remain available.
+Review a pull request and its successful checks before merging. Merging to `main` triggers GitHub Pages publishing. Confirm the Pages deployment succeeds and verify the public site. The website check and Pages deployment are separate workflows; this repository does not configure a deployment gate or branch protection.
 
-Public canonical URLs and the sitemap use https://niororesources.com and indexing is enabled. The separate private ChatGPT Site is not changed by this GitHub branch.
+## Safe output cleanup
 
-Forms continue to prepare email drafts to partner@niororesources.com; no direct submission provider is connected. The presence of a form or successful build does not confirm mailbox delivery.
+The manifest records hashes for generated root files. Publishing removes only retired files previously owned by that manifest, and refuses to delete any retired file that has been edited. Unknown files under `en/`, `fr/`, or `assets/` block publishing for explicit review. `--dry-run` lists planned retirements without writing anything. Do not edit the manifest manually to bypass a warning.
+
+`CNAME`, `.nojekyll`, source, docs, original brand assets, and `legacy/` are preserved. Legacy files are maintained source copied into `dist/` for previews; publishing verifies that copy instead of overwriting the source. The older root `site.js`, `style.css`, and `favicon.svg` remain available pending a review of external usage.
+
+## Compatibility and forms
+
+Keep `/legacy/`, `/legacy/privacy.html`, `/privacy.html`, and former `/en/markets/` and `/fr/markets/` URLs. The applications page links to the legacy app catalog. Existing numeric contact categories retain their meanings.
+
+Forms prepare email drafts to `partner@niororesources.com`. No automatic delivery provider is configured. Follow the README's provider contract if enabling direct submission; never commit credentials.
+
+## Rollback
+
+Revert the cleanup or subsequent change through a reviewed pull request, including source, generated output, and manifest together. For a route retirement, its earlier manifest and generated files are available in Git history. Domain and HTTPS settings are independent of source changes.

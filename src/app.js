@@ -7,7 +7,7 @@
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&toggle?.getAttribute('aria-expanded')==='true'){close();toggle.focus();}});
  document.addEventListener('click',e=>{if(!e.target.closest('.header'))close();});
  matchMedia('(min-width:821px)').addEventListener('change',e=>{if(e.matches)close();});
- document.querySelector('[data-language]')?.addEventListener('click',e=>{const query=new URLSearchParams(location.search);const cat=query.get('category');if(cat&&/^[0-9]$/.test(cat))e.currentTarget.href+='?category='+cat;});
+ document.querySelector('[data-language]')?.addEventListener('click',e=>{const query=new URLSearchParams(location.search);const cat=query.get('category');if(cat&&/^\d+$/.test(cat)){const target=new URL(e.currentTarget.href);target.searchParams.set('category',cat);e.currentTarget.href=target.href;}});
  const network=document.querySelector('[data-network]');
  if(network){
   const choose=id=>{
@@ -21,7 +21,7 @@
  }
  const form=document.querySelector('[data-inquiry]');if(!form)return;
  const category=new URLSearchParams(location.search).get('category');
- if(category&&/^[0-9]$/.test(category))form.elements.category.value=category;
+ if(category&&Array.from(form.elements.category.options).some(option=>option.value===category))form.elements.category.value=category;
  const result=form.querySelector('.form-result'),submit=form.querySelector('[type=submit]'),note=document.getElementById('form-note');
  const endpoint=config.formEndpoint||'';const direct=endpoint.startsWith('https://');
  if(direct){note.textContent=note.dataset.directNote;submit.textContent=submit.dataset.send;}

@@ -1,4 +1,4 @@
-Start with **START-HERE.md** for GitHub import and live-site connection instructions.
+Start with [GITHUB-DEPLOYMENT.md](GITHUB-DEPLOYMENT.md) for the current edit, check and release workflow.
 
 # Nioro Resources website
 
@@ -18,7 +18,8 @@ Open http://127.0.0.1:4387/en/ or http://127.0.0.1:4387/fr/. Stop the server wit
 
 ## Edit content and branding
 
-- `src/content.py`: English and French text, solution details and market descriptions. Keep both language dictionaries complete.
+- `src/content.py`: English and French text, solution details and market descriptions. Keep both language dictionaries complete. Category keys are stable public IDs; do not renumber them. `{email}` placeholders are populated from configuration.
+- `src/schema.py`: shared public routes and cross-language validation.
 - `src/styles.css`: shared design, spacing, typography and responsive layouts.
 - `src/app.js`: navigation, form validation and email draft handling.
 - `build.py`: shared HTML templates and static generation.
@@ -26,7 +27,7 @@ Open http://127.0.0.1:4387/en/ or http://127.0.0.1:4387/fr/. Stop the server wit
 - `src/assets/`: original logo PNGs, local Montserrat fonts, map outlines and favicon wrapper.
 - `brand-originals/`: all six original approved assets and the supplied ZIP.
 
-After changes, rebuild, run `check.py` and reload your browser. The `dist` directory is regenerated; do not edit it directly. Content editing is file-based; this project does not include a CMS account or dashboard.
+After changes, follow the build, check and publish commands in GITHUB-DEPLOYMENT.md. The `dist` directory is regenerated and ignored by Git; do not edit it directly. The repository root contains the published output and `generated-files.json` records its ownership. Content editing is file-based; this project does not include a CMS account or dashboard.
 
 ## Inquiry handling — current configuration
 
@@ -72,17 +73,11 @@ Language switching preserves the current page. Solution CTAs select the correspo
 
 ## Deploy to niororesources.com
 
-Upload the contents of `dist/` to a static host supporting directory index pages and a custom `404.html`. Publish the folder contents at the domain root, not under a subdirectory. The `.openai/hosting.json` file identifies the private Sites project; it is not needed for another host.
+GitHub Pages publishes the checked-in root of `main`. The public origin is `https://niororesources.com`, indexing is enabled, and HTTPS enforcement is configured. See [GITHUB-DEPLOYMENT.md](GITHUB-DEPLOYMENT.md) for publishing, safe generated-file retirement and rollback.
 
-Before a public-domain launch:
+For another static host, deploy the contents of `dist/` at the domain root. Preserve directory-index and `404.html` behavior. `_headers` is a portable configuration for hosts that support that format, not proof that GitHub Pages applies those headers. Verify actual response headers before relying on them.
 
-1. Set `origin` to `https://niororesources.com` and `indexable` to `true`, then rebuild. The private review version intentionally uses `noindex` and disallows crawling.
-2. Configure the domain's DNS with the chosen host and enable HTTPS. Neither DNS nor the existing domain has been changed by this project.
-3. Ensure `.html` directory routes and 404 behavior work. Apply `_headers` where supported, or configure equivalent headers in the host. Avoid a catch-all that returns the homepage with a 200 status for unknown pages.
-4. Verify contact delivery, final French copy and public company details. The privacy text is a site-specific draft and needs to reflect actual operational practices and providers.
-5. Check mobile Safari, desktop Safari, Chromium and Firefox, keyboard-only navigation, zoom, contrast and a screen reader. Submit `/sitemap.xml` to your search tools after launch.
-
-All pages have language attributes, unique titles, descriptions, canonical URLs, alternate language URLs, social metadata and Organization structured data. The site is fully pre-rendered; content and navigation do not require JavaScript. No analytics or tracking service is configured. Security headers are supplied, but enforcement depends on the host.
+All modern pages include language attributes, descriptions, canonical URLs, alternate language URLs, social metadata and Organization structured data. Legacy pages and the compatibility privacy redirect have narrower metadata requirements. No analytics or tracking service is configured.
 
 ## Content boundaries
 
@@ -100,7 +95,7 @@ The map is derived from Natural Earth 1:110m country boundaries, public-domain g
 
 ## Validation status
 
-`check.py` checks all generated pages for internal links and anchors, assets, language metadata, one H1 per page, duplicate IDs, map labels and excluded sensitive identifiers. JavaScript syntax is checked with `node --check src/app.js` when Node is available.
+`check.py` checks local links on all generated HTML, including legacy pages and the compatibility redirect, and checks CSS asset references. Modern pages additionally require language metadata, one H1, map labels and excluded-identifier checks. Shared route/category validation covers both locales. `publish-root.py --check` validates generated ownership and detects unexpected output. JavaScript syntax is checked with `node --check src/app.js`; regression checks run with `python3 -m unittest discover -s tests -v`. External URLs and real form-provider delivery require separate verification.
 
 Browser checks covered the English homepage and customer form, invalid-field blocking, a valid local email draft with correct recipient, the French homepage at a 390px viewport, and mobile menu navigation to the French partners page. No inquiry was sent. Additional browser/device and direct-submission delivery checks remain launch tasks; no Lighthouse score or formal accessibility conformance is claimed.
 
@@ -112,4 +107,4 @@ The interactive Global Network page highlights the United States, Senegal, Franc
 
 Content is organized by locale in `src/content.py` so new languages can reuse the page templates. Adding another language requires its complete content dictionary, language-switch/alternate metadata updates and translated interaction strings in `src/app.js`, followed by route and UI checks. English and French are the released languages.
 
-Expansion verification: all six country selectors were exercised in the browser; clicking the China country outline selected its sourcing-partner panel. Keyboard Enter selected Turkey on the French map at 390px width with no horizontal overflow. The French development-page CTA opened contact category 9. Generated checks passed for all 34 HTML pages and the new service-category links. Direct email delivery remains untested and unconfigured as described above.
+Expansion verification: all six country selectors were exercised in the browser; clicking the China country outline selected its sourcing-partner panel. Keyboard Enter selected Turkey on the French map at 390px width with no horizontal overflow. The French development-page CTA opened contact category 9. Generated checks cover all 37 HTML pages and the new service-category links. Direct email delivery remains untested and unconfigured as described above.

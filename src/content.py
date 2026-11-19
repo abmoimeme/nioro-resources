@@ -1,7 +1,6 @@
 CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'Contact'],
         'skip': 'Skip to content',
         'menu': 'Menu',
-        'close': 'Close menu',
         'homeTitle': 'Global Sourcing. International Trade. Technology Solutions.',
         'heroLead': 'Connecting businesses with products, technology, furniture, and sourcing expertise across the United '
                     'States, Africa, Europe, and Asia.',
@@ -52,10 +51,6 @@ CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'C
         'privacy': 'Privacy & site information',
         'rights': 'All rights reserved.',
         'aboutPageTitle': 'International reach. Practical solutions.',
-        'aboutIntro': 'Established in 2020 and headquartered in Arizona, Nioro Resources LLC is an international sourcing, trade '
-                      'and technology solutions company. Our network connects commercial relationships in the United States, '
-                      'Senegal, France, Italy and Turkey with sourcing partners in China. Our development department builds '
-                      'applications, mobile apps, websites and engineering processes.',
         'missionTitle': 'Our purpose',
         'mission': 'Connect businesses with products, technology, furniture and sourcing expertise across the United States, '
                    'Africa, Europe and Asia.',
@@ -221,20 +216,20 @@ CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'C
                    'category': 'Inquiry type',
                    'message': 'Your requirements',
                    'website': 'Website (optional)'},
-        'categories': ['Project or quote request',
-                       'Trade & procurement',
-                       'Technology & telecom',
-                       'Logistics & supply chain',
-                       'Government or institution',
-                       'Supplier or partner',
-                       'General inquiry',
-                       'International sourcing',
-                       'Furniture & interior solutions',
-                       'Applications, websites & process engineering'],
+        'categories': {'0': 'Project or quote request',
+                       '1': 'Trade & procurement',
+                       '2': 'Technology & telecom',
+                       '3': 'Logistics & supply chain',
+                       '4': 'Government or institution',
+                       '5': 'Supplier or partner',
+                       '6': 'General inquiry',
+                       '7': 'International sourcing',
+                       '8': 'Furniture & interior solutions',
+                       '9': 'Applications, websites & process engineering'},
         'consent': 'I have read the privacy information and agree to use these details to respond to my inquiry.',
         'prepare': 'Prepare email inquiry',
         'send': 'Send inquiry',
-        'emailNote': 'This form prepares an email to partner@niororesources.com. It does not send automatically. You will review '
+        'emailNote': 'This form prepares an email to {email}. It does not send automatically. You will review '
                      'and send it in your email app.',
         'directNote': 'Your inquiry will be submitted to our configured form service. Delivery is confirmed only after the '
                       'service accepts it.',
@@ -246,7 +241,7 @@ CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'C
         'privacyTitle': 'Privacy & site information',
         'privacySections': [['Who operates this site',
                              'This website presents Nioro Resources LLC, headquartered in Arizona, United States. Contact: '
-                             'partner@niororesources.com.'],
+                             '{email}.'],
                             ['Inquiry information',
                              'The forms ask for your name, business email, organization, market, inquiry category and '
                              'requirements. These details are used to understand and respond to your request. Avoid sending '
@@ -261,7 +256,7 @@ CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'C
                              'may process access logs for delivery, security and abuse prevention. Hosting access may require '
                              'account cookies independently of this website.'],
                             ['Your requests',
-                             'Email partner@niororesources.com to ask about information you have provided, request correction or '
+                             'Email {email} to ask about information you have provided, request correction or '
                              'request deletion. Records may need to be retained for ongoing business or applicable obligations.'],
                             ['Scope of this website',
                              'Content describes business focus areas and opportunities. It is not an offer, a guarantee of '
@@ -346,7 +341,6 @@ CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'C
  'fr': {'nav': ['À propos', 'Solutions', 'Réseau mondial', 'Partenaires', 'Contact'],
         'skip': 'Aller au contenu',
         'menu': 'Menu',
-        'close': 'Fermer le menu',
         'homeTitle': 'Sourcing mondial. Commerce international. Solutions technologiques.',
         'heroLead': 'Relier les entreprises aux produits, aux technologies, au mobilier et à l’expertise en approvisionnement '
                     'aux États-Unis, en Afrique, en Europe et en Asie.',
@@ -400,11 +394,6 @@ CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'C
         'privacy': 'Confidentialité et informations',
         'rights': 'Tous droits réservés.',
         'aboutPageTitle': 'Une portée internationale. Des solutions concrètes.',
-        'aboutIntro': 'Fondée en 2020 et basée en Arizona, Nioro Resources LLC est une entreprise de sourcing, de commerce '
-                      'international et de solutions technologiques. Notre réseau relie des relations commerciales aux '
-                      'États-Unis, au Sénégal, en France, en Italie et en Turquie à des partenaires de sourcing en Chine. Notre '
-                      'département de développement réalise des applications, des applications mobiles, des sites web et des '
-                      'processus d’ingénierie.',
         'missionTitle': 'Notre mission',
         'mission': 'Relier les entreprises aux produits, aux technologies, au mobilier et à l’expertise en sourcing aux '
                    'États-Unis, en Afrique, en Europe et en Asie.',
@@ -584,21 +573,21 @@ CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'C
                    'category': 'Type de demande',
                    'message': 'Votre besoin',
                    'website': 'Site web (facultatif)'},
-        'categories': ['Projet ou demande de devis',
-                       'Commerce et approvisionnement',
-                       'Technologie et télécoms',
-                       'Logistique et approvisionnement',
-                       'Secteur public ou institution',
-                       'Fournisseur ou partenaire',
-                       'Demande générale',
-                       'Sourcing international',
-                       'Mobilier et solutions d’intérieur',
-                       'Applications, sites web et processus d’ingénierie'],
+        'categories': {'0': 'Projet ou demande de devis',
+                       '1': 'Commerce et approvisionnement',
+                       '2': 'Technologie et télécoms',
+                       '3': 'Logistique et approvisionnement',
+                       '4': 'Secteur public ou institution',
+                       '5': 'Fournisseur ou partenaire',
+                       '6': 'Demande générale',
+                       '7': 'Sourcing international',
+                       '8': 'Mobilier et solutions d’intérieur',
+                       '9': 'Applications, sites web et processus d’ingénierie'},
         'consent': 'J’ai lu les informations de confidentialité et j’accepte l’utilisation de ces données pour répondre à ma '
                    'demande.',
         'prepare': 'Préparer la demande par e-mail',
         'send': 'Envoyer la demande',
-        'emailNote': 'Ce formulaire prépare un e-mail à partner@niororesources.com. Il ne l’envoie pas automatiquement. Vous '
+        'emailNote': 'Ce formulaire prépare un e-mail à {email}. Il ne l’envoie pas automatiquement. Vous '
                      'devez le vérifier et l’envoyer depuis votre messagerie.',
         'directNote': 'Votre demande sera transmise au service de formulaire configuré. Sa réception n’est confirmée qu’après '
                       'acceptation par ce service.',
@@ -611,7 +600,7 @@ CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'C
         'privacyTitle': 'Confidentialité et informations du site',
         'privacySections': [['Responsable du site',
                              'Ce site présente Nioro Resources LLC, dont le siège est en Arizona, aux États-Unis. Contact : '
-                             'partner@niororesources.com.'],
+                             '{email}.'],
                             ['Informations demandées',
                              'Les formulaires recueillent votre nom, votre e-mail professionnel, votre organisation, votre '
                              'marché, le type de demande et vos besoins. Ces informations servent à comprendre votre demande et '
@@ -629,7 +618,7 @@ CONTENT = {'en': {'nav': ['About', 'Solutions', 'Global Network', 'Partners', 'C
                              'sécurité et de prévention des abus. L’accès à l’hébergement peut nécessiter des cookies de compte '
                              'indépendants de ce site.'],
                             ['Vos demandes',
-                             'Écrivez à partner@niororesources.com pour demander des informations sur les données transmises, '
+                             'Écrivez à {email} pour demander des informations sur les données transmises, '
                              'leur rectification ou leur suppression. Certains éléments peuvent devoir être conservés pour le '
                              'suivi commercial ou les obligations applicables.'],
                             ['Portée du contenu',
