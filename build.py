@@ -4,6 +4,7 @@ import json, shutil, html, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent / 'src'))
 from content import CONTENT
+from schema import PAGES, validate_content
 ROOT=Path(__file__).resolve().parent
 C=json.loads((ROOT/'site.config.json').read_text()); OUT=ROOT/'dist'
 if OUT.exists(): shutil.rmtree(OUT)
@@ -11,7 +12,11 @@ OUT.mkdir(); shutil.copytree(ROOT/'src/assets',OUT/'assets')
 for file in ['styles.css','app.js']: shutil.copy(ROOT/'src'/file,OUT/file)
 (OUT/'config.js').write_text('window.NIORO_CONFIG = '+json.dumps({'email':C['email'],'formEndpoint':C['formEndpoint']})+';\n')
 E=html.escape
-PAGES=['','about','solutions','markets','partners','contact','privacy','solutions/trade','solutions/technology','solutions/logistics','solutions/government','solutions/sourcing','solutions/furniture','solutions/applications','global-network','corporate-profile']
+validate_content(CONTENT)
+for locale in CONTENT.values():
+ locale["aboutIntro"] = locale["aboutText"]
+ locale["emailNote"] = locale["emailNote"].replace("{email}", C["email"])
+ locale["privacySections"] = [[a, b.replace("{email}", C["email"])] for a, b in locale["privacySections"]]
 def url(l,p=''): return f'/{l}/'+(p+'/' if p else '')
 def link(l,p,text,cls=''): return f'<a class="{cls}" href="{url(l,p)}">{E(text)}</a>'
 def logo(l,dark=False): return f'<a class="brand" href="{url(l)}" aria-label="Nioro Resources — '+('Home' if l=='en' else 'Accueil')+f'"><img src="/assets/logo-{"reversed" if dark else "primary"}.png" width="2400" height="920" alt="Nioro Resources"></a>'
@@ -47,7 +52,7 @@ def form(l,partner=False):
  for name in ['name','email','organization','country','website']:
   typ={'email':'email','website':'url'}.get(name,'text');auto={'name':'name','email':'email','organization':'organization','country':'country-name','website':'url'}[name]
   htmls.append(f'<div class="field"><label for="{name}">{E(fields[name])}</label><input id="{name}" name="{name}" type="{typ}" autocomplete="{auto}" maxlength="{254 if name=="email" else 160}" {"required" if name!="website" else ""}></div>')
- cats=''.join(f'<option value="{i}" {"selected" if (partner and i==5) else ""}>{E(v)}</option>' for i,v in enumerate(t['categories']))
+ cats=''.join(f'<option value="{i}" {"selected" if (partner and i=="5") else ""}>{E(v)}</option>' for i,v in t['categories'].items())
  return f'''<div class="form-block" id="inquiry"><h2>{E(t['partnerFormTitle'] if partner else t['formTitle'])}</h2><p>{E(t['formIntro'])}</p><form data-inquiry data-partner="{str(partner).lower()}"><div class="form-grid">{''.join(htmls)}<div class="field"><label for="category">{fields['category']}</label><select id="category" name="category">{cats}</select></div><div class="field full"><label for="message">{fields['message']}</label><textarea id="message" name="message" rows="6" minlength="20" maxlength="4000" required aria-describedby="message-help"></textarea><small id="message-help">{'20–4,000 characters. Include scope, location and timing.' if l=='en' else '20 à 4 000 caractères. Précisez le besoin, le lieu et le calendrier.'}</small></div></div><div class="honey" aria-hidden="true"><label>Leave empty<input name="fax" tabindex="-1" autocomplete="off"></label></div><label class="consent"><input type="checkbox" name="consent" required><span>{E(t['consent'])} {link(l,'privacy',t['privacy'],'inline-link')}</span></label><p class="form-note" id="form-note" data-email-note="{E(t['emailNote'])}" data-direct-note="{E(t['directNote'])}">{E(t['emailNote'])}</p><button class="button" type="submit" data-prepare="{E(t['prepare'])}" data-send="{E(t['send'])}">{E(t['prepare'])}</button><div class="form-result" role="status" aria-live="polite" tabindex="-1" hidden></div><noscript><p>{'JavaScript is required to prepare the form. Email us directly:' if l=='en' else 'JavaScript est nécessaire pour préparer le formulaire. Écrivez-nous directement :'} <a href="mailto:{C['email']}">{C['email']}</a></p></noscript></form></div>'''
 def legacy_catalog(l):
  return '<p><a class="inline-link" href="/legacy/#games">'+('Our apps and games' if l=='en' else 'Nos applications et jeux')+'</a></p>'
@@ -59,7 +64,7 @@ def body(l,p):
   return intro(l,t['nav'][0],t['aboutPageTitle'],t['aboutIntro'])+f'<div class="wrap profile-link">{link(l,"corporate-profile",t["profileLabel"],"text-link")}</div>'+f'<section class="section muted"><div class="wrap two-col"><article><p class="eyebrow">{t["missionTitle"]}</p><h2>{t["mission"]}</h2></article><article><p class="eyebrow">{t["visionTitle"]}</p><p class="lead">{t["vision"]}</p></article></div></section><section class="section wrap split"><h2>{t["valuesTitle"]}</h2>{rows(t["values"])}</section><section class="scope wrap"><h2>{t["scopeTitle"]}</h2><p>{t["scopeText"]}</p></section>'+cta(l)
  if p=='solutions': return intro(l,t['nav'][1],t['solutionsTitle'],t['solutionsLead'])+f'<section class="wrap section compact">{solutions(l)}</section>'+cta(l)
  if p.startswith('solutions/'):
-  s=next(s for s in t['solutions'] if s['slug']==p.split('/')[1]);idx=t['solutions'].index(s)
+  s=next(s for s in t['solutions'] if s['slug']==p.split('/')[1])
   return intro(l,t['nav'][1],s['title'],s['intro'])+f'<section class="section muted"><div class="wrap split"><div><p class="eyebrow">{t["serviceFocus"]}</p><h2>{s["focus"]}</h2></div>{rows(s["items"])}</div></section><section class="wrap section two-col"><div><h2>{t["startWith"]}</h2><p>{s["need"]}</p><a class="button" href="{url(l,"contact")}?category={s["category"]}#inquiry">{t["discuss"]}</a></div><aside class="scope"><h3>{t["scopeLabel"]}</h3><p>{s["note"]}</p>{legacy_catalog(l) if s["slug"]=="applications" else ""}</aside></section><section class="section wrap compact"><h2>{t["otherSolutions"]}</h2>{solutions(l,s["slug"])}</section>'
  if p in ['markets','global-network']: return intro(l,t['nav'][2],t['marketsTitle'],t['marketsLead'])+network(l)+cta(l)
  if p=='corporate-profile': return profile(l)
